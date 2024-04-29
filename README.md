@@ -8,7 +8,7 @@ Changes from NewPipe to achive some kind of parental control:
   This should act as an access control for minors, so only videos from whitelisted channels can be accessed.
 
 Warning:
-  This fork is for personal use for my kids, and not indended for puplic release.
+  This fork is for personal use for my kids, and not indended for public release.
   The changes have been implented in a laypersons way and come with several side effects.
 
   
