@@ -9,6 +9,6 @@ Changes from NewPipe to achive some kind of parental control:
 
 Warning:
   This fork is for personal use for my kids, and not indended for public release.
-  The changes have been implented in a laypersons way and come with several side effects.
+  The changes have been implemented in a laypersons way and come with several side effects.
 
   
