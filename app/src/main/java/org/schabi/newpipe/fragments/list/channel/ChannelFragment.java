@@ -285,7 +285,10 @@ public class ChannelFragment extends BaseStateFragment<ChannelInfo>
 
     private Function<Object, Object> mapOnSubscribe(final SubscriptionEntity subscription) {
         return (@NonNull Object o) -> {
-            subscriptionManager.insertSubscription(subscription);
+            final String a = binding.editTextNumberPassword.getText().toString();
+            if (a.equals("1234")) {
+                subscriptionManager.insertSubscription(subscription);
+            }
             return o;
         };
     }

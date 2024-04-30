@@ -72,6 +72,8 @@
                     app:tint="@null"
                     tools:visibility="visible" />
 
+
+
                 <org.schabi.newpipe.views.NewPipeTextView
                     android:id="@+id/channel_title_view"
                     android:layout_width="0dp"
@@ -121,6 +123,13 @@
                     app:layout_constraintStart_toEndOf="@+id/channel_avatar_view"
                     app:layout_constraintTop_toBottomOf="@+id/sub_channel_title_view"
                     tools:text="123,141,411 subscribers" />
+
+                <EditText
+                    android:id="@+id/editTextNumberPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="numberPassword" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/channel_subscribe_button"

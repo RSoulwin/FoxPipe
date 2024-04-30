@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.schabi.newpipe.database.feed.model.FeedGroupEntity;
+import org.schabi.newpipe.database.subscription.SubscriptionEntity;
 import org.schabi.newpipe.databinding.PignateFooterBinding;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem;
@@ -32,9 +34,9 @@ import org.schabi.newpipe.info_list.holder.StreamGridInfoItemHolder;
 import org.schabi.newpipe.info_list.holder.StreamInfoItemHolder;
 import org.schabi.newpipe.info_list.holder.StreamMiniInfoItemHolder;
 import org.schabi.newpipe.local.history.HistoryRecordManager;
+import org.schabi.newpipe.local.subscription.SubscriptionManager;
 import org.schabi.newpipe.util.FallbackViewHolder;
 import org.schabi.newpipe.util.OnClickGesture;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -85,6 +87,9 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final List<InfoItem> infoItemList;
     private final HistoryRecordManager recordManager;
 
+    private final SubscriptionManager subscriptionManager;
+
+
     private boolean useMiniVariant = false;
     private boolean showFooter = false;
 
@@ -95,6 +100,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public InfoListAdapter(final Context context) {
         layoutInflater = LayoutInflater.from(context);
         recordManager = new HistoryRecordManager(context);
+        subscriptionManager = new SubscriptionManager(context);
         infoItemBuilder = new InfoItemBuilder(context);
         infoItemList = new ArrayList<>();
     }
@@ -133,7 +139,28 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         final int offsetStart = sizeConsideringHeaderOffset();
-        infoItemList.addAll(data);
+
+        final List<InfoItem> dataFiltered = new ArrayList<>();
+        for (final InfoItem ii : data) {
+            if (ii.getInfoType() == InfoItem.InfoType.CHANNEL) {
+                dataFiltered.add(ii);
+            }
+            if (ii.getInfoType() == InfoItem.InfoType.STREAM) {
+                final StreamInfoItem s = (StreamInfoItem) ii;
+                final List<SubscriptionEntity>  subs =
+                        subscriptionManager.getSubscriptions(FeedGroupEntity.GROUP_ALL_ID,
+                                "", false).blockingFirst();
+                for (final SubscriptionEntity si: subs) {
+                    final String streamUploaderName = s.getUploaderName();
+                    final String tempChannelName = si.getName();
+                    if (streamUploaderName.equals(tempChannelName)) {
+                        dataFiltered.add(s);
+                        break;
+                    }
+                }
+            }
+        }
+        infoItemList.addAll(dataFiltered);
 
         if (DEBUG) {
             Log.d(TAG, "addInfoItemList() after > offsetStart = " + offsetStart + ", "
@@ -141,7 +168,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     + "hasHeader = " + hasHeader() + ", "
                     + "showFooter = " + showFooter);
         }
-        notifyItemRangeInserted(offsetStart, data.size());
+        notifyItemRangeInserted(offsetStart, dataFiltered.size());
 
         if (showFooter) {
             final int footerNow = sizeConsideringHeaderOffset();
