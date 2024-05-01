@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.malerva0.cloggedpipe",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 997,
+      "versionName": "0.27.0",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
