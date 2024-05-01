@@ -1,7 +1,15 @@
+
 .gradle/
 local.properties
 .DS_Store
-build/
+app/build/*
+!app/build/outputs/
+app/build/outputs/mapping
+app/build/outputs/logs
+app/build/outputs/apk/androidTest
+app/build/outputs/sdk-dependencies
+
+
 captures/
 .idea/
 *.iml
