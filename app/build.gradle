@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "org.malerva0.cloggedpipe"
         resValue "string", "app_name", "CloggedPipe"
-        minSdk 21
+        minSdk 26
         targetSdk 33
         versionCode 997
         versionName "0.27.0"
