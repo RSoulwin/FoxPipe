@@ -3,8 +3,7 @@
     <!-- YouTube -->
     <color name="light_youtube_primary_color">#99198F</color>
     <color name="light_youtube_accent_color">#000000</color>
-
-
+    
     <color name="dark_youtube_primary_color">#99198F</color>
     <color name="dark_youtube_accent_color">#FFFFFF</color>
 
