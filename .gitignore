@@ -9,7 +9,7 @@ captures/
 .weblate
 *.class
 app/debug/
-app/release/
+#app/release/
 
 # vscode / eclipse files
 *.classpath
