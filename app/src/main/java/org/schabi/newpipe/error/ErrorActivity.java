@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.IntentCompat;
 
 import com.grack.nanojson.JsonWriter;
 
@@ -105,7 +106,7 @@ public class ErrorActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        errorInfo = intent.getParcelableExtra(ERROR_INFO);
+        errorInfo = IntentCompat.getParcelableExtra(intent, ERROR_INFO, ErrorInfo.class);
 
         // important add guru meditation
         addGuruMeditation();
@@ -160,7 +161,7 @@ public class ErrorActivity extends AppCompatActivity {
                 .setMessage(R.string.start_accept_privacy_policy)
                 .setCancelable(false)
                 .setNeutralButton(R.string.read_privacy_policy, (dialog, which) ->
-                        ShareUtils.openUrlInBrowser(context,
+                        ShareUtils.openUrlInApp(context,
                                 context.getString(R.string.privacy_policy_url)))
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
                     if (action.equals("EMAIL")) { // send on email
@@ -171,14 +172,12 @@ public class ErrorActivity extends AppCompatActivity {
                                         + getString(R.string.app_name) + " "
                                         + BuildConfig.VERSION_NAME)
                                 .putExtra(Intent.EXTRA_TEXT, buildJson());
-                        ShareUtils.openIntentInApp(context, i, true);
+                        ShareUtils.openIntentInApp(context, i);
                     } else if (action.equals("GITHUB")) { // open the NewPipe issue page on GitHub
-                        ShareUtils.openUrlInBrowser(this, ERROR_GITHUB_ISSUE_URL, false);
+                        ShareUtils.openUrlInApp(this, ERROR_GITHUB_ISSUE_URL);
                     }
                 })
-                .setNegativeButton(R.string.decline, (dialog, which) -> {
-                    // do nothing
-                })
+                .setNegativeButton(R.string.decline, null)
                 .show();
     }
 
