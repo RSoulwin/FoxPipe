@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - beta
+      - coil
       - dev
       - master
       - refactor
@@ -20,6 +21,7 @@ on:
   push:
     branches:
       - beta
+      - coil
       - dev
       - master
       - refactor
