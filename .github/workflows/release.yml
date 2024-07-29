@@ -9,9 +9,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Get release version number
         id: get_version
@@ -23,7 +22,7 @@ jobs:
 
       - name: Bump version in build.gradle
         id: bump_version
-        uses: Swisyn/android-version-generator-actions@v1.2
+        uses: Swisyn/android-version-generator-actions@v1.5
         with:
           gradlePath: app/build.gradle
           versionCode: 954
@@ -32,9 +31,9 @@ jobs:
       - name: Build release apk
         run: ./gradlew assembleRelease --stacktrace
 
-      - name: Sign release
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
+      - name: Sign apk
+        uses: noriban/sign-android-release@v5
+        id: sign_apk
         with:
           releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -43,10 +42,10 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Rename apk
-        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} NewPipe-${{ steps.bump_version.outputs.generated_version_name }}_Extractor-${{ steps.get_version.outputs.version-without-v }}.apk
+        run: mv ${{ steps.sign_apk.outputs.signedReleaseFile }} NewPipe-${{ steps.bump_version.outputs.generated_version_name }}_Extractor-${{ steps.get_version.outputs.version-without-v }}.apk
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: '*.apk'
           fail_on_unmatched_files: true
