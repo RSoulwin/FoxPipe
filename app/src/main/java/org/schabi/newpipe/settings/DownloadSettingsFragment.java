@@ -123,7 +123,6 @@ public class DownloadSettingsFragment extends BasePreferenceFragment {
         }
         rawUri = decodeUrlUtf8(rawUri);
 
-
         target.setSummary(rawUri);
     }
 
