@@ -6,6 +6,7 @@ on:
     branches:
       - dev
       - master
+      - modern
       - refactor
       - release**
     paths-ignore:
@@ -20,6 +21,7 @@ on:
     branches:
       - dev
       - master
+      - modern
     paths-ignore:
       - 'README.md'
       - 'doc/**'
@@ -102,13 +104,6 @@ jobs:
           target: ${{ matrix.target }}
           arch: ${{ matrix.arch }}
           script: ./gradlew connectedCheck --stacktrace
-
-      - name: Upload test report when tests fail # because the printed out stacktrace (console) is too short, see also #7553
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: android-test-report-api${{ matrix.api-level }}
-          path: app/build/reports/androidTests/connected/**
 
   sonar:
     runs-on: ubuntu-latest
