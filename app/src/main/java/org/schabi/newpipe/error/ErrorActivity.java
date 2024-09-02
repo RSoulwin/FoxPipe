@@ -2,7 +2,6 @@ package org.schabi.newpipe.error;
 
 import static org.schabi.newpipe.util.Localization.assureCorrectAppLanguage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,15 +12,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.IntentCompat;
 
 import com.grack.nanojson.JsonWriter;
 
 import org.schabi.newpipe.BuildConfig;
-import org.schabi.newpipe.MainActivity;
 import org.schabi.newpipe.R;
 import org.schabi.newpipe.databinding.ActivityErrorBinding;
 import org.schabi.newpipe.util.Localization;
@@ -105,7 +103,7 @@ public class ErrorActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        errorInfo = intent.getParcelableExtra(ERROR_INFO);
+        errorInfo = IntentCompat.getParcelableExtra(intent, ERROR_INFO, ErrorInfo.class);
 
         // important add guru meditation
         addGuruMeditation();
@@ -160,7 +158,7 @@ public class ErrorActivity extends AppCompatActivity {
                 .setMessage(R.string.start_accept_privacy_policy)
                 .setCancelable(false)
                 .setNeutralButton(R.string.read_privacy_policy, (dialog, which) ->
-                        ShareUtils.openUrlInBrowser(context,
+                        ShareUtils.openUrlInApp(context,
                                 context.getString(R.string.privacy_policy_url)))
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
                     if (action.equals("EMAIL")) { // send on email
@@ -171,14 +169,12 @@ public class ErrorActivity extends AppCompatActivity {
                                         + getString(R.string.app_name) + " "
                                         + BuildConfig.VERSION_NAME)
                                 .putExtra(Intent.EXTRA_TEXT, buildJson());
-                        ShareUtils.openIntentInApp(context, i, true);
+                        ShareUtils.openIntentInApp(context, i);
                     } else if (action.equals("GITHUB")) { // open the NewPipe issue page on GitHub
-                        ShareUtils.openUrlInBrowser(this, ERROR_GITHUB_ISSUE_URL, false);
+                        ShareUtils.openUrlInApp(this, ERROR_GITHUB_ISSUE_URL);
                     }
                 })
-                .setNegativeButton(R.string.decline, (dialog, which) -> {
-                    // do nothing
-                })
+                .setNegativeButton(R.string.decline, null)
                 .show();
     }
 
@@ -186,25 +182,6 @@ public class ErrorActivity extends AppCompatActivity {
         final String separator = "-------------------------------------";
         return Arrays.stream(el)
                 .collect(Collectors.joining(separator + "\n", separator + "\n", separator));
-    }
-
-    /**
-     * Get the checked activity.
-     *
-     * @param returnActivity the activity to return to
-     * @return the casted return activity or null
-     */
-    @Nullable
-    static Class<? extends Activity> getReturnActivity(final Class<?> returnActivity) {
-        Class<? extends Activity> checkedReturnActivity = null;
-        if (returnActivity != null) {
-            if (Activity.class.isAssignableFrom(returnActivity)) {
-                checkedReturnActivity = returnActivity.asSubclass(Activity.class);
-            } else {
-                checkedReturnActivity = MainActivity.class;
-            }
-        }
-        return checkedReturnActivity;
     }
 
     private void buildInfo(final ErrorInfo info) {

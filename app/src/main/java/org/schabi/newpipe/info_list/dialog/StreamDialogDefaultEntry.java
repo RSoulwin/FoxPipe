@@ -41,10 +41,11 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
  * </p>
  */
 public enum StreamDialogDefaultEntry {
-    SHOW_CHANNEL_DETAILS(R.string.show_channel_details, (fragment, item) ->
-            fetchUploaderUrlIfSparse(fragment.requireContext(), item.getServiceId(), item.getUrl(),
-                    item.getUploaderUrl(), url -> openChannelFragment(fragment, item, url))
-    ),
+    SHOW_CHANNEL_DETAILS(R.string.show_channel_details, (fragment, item) -> {
+        final var activity = fragment.requireActivity();
+        fetchUploaderUrlIfSparse(activity, item.getServiceId(), item.getUrl(),
+                item.getUploaderUrl(), url -> openChannelFragment(activity, item, url));
+    }),
 
     /**
      * Enqueues the stream automatically to the current PlayerType.
@@ -99,18 +100,12 @@ public enum StreamDialogDefaultEntry {
         )
     ),
 
-    PLAY_WITH_KODI(R.string.play_with_kodi_title, (fragment, item) -> {
-        final Uri videoUrl = Uri.parse(item.getUrl());
-        try {
-            NavigationHelper.playWithKore(fragment.requireContext(), videoUrl);
-        } catch (final Exception e) {
-            KoreUtils.showInstallKoreDialog(fragment.requireActivity());
-        }
-    }),
+    PLAY_WITH_KODI(R.string.play_with_kodi_title, (fragment, item) ->
+            KoreUtils.playWithKore(fragment.requireContext(), Uri.parse(item.getUrl()))),
 
     SHARE(R.string.share, (fragment, item) ->
             ShareUtils.shareText(fragment.requireContext(), item.getName(), item.getUrl(),
-                    item.getThumbnailUrl())),
+                    item.getThumbnails())),
 
     /**
      * Opens a {@link DownloadDialog} after fetching some stream info.
