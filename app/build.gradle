@@ -209,7 +209,7 @@ dependencies {
     // WORKAROUND: if you get errors with the NewPipeExtractor dependency, replace `v0.24.3` with
     // the corresponding commit hash, since JitPack is sometimes buggy
     // implementation 'com.github.whistlingwoods:NewPipeExtractor:06bf3c29932316327236a3a76daaf2685ee6d785'
-    implementation 'com.github.whistlingwoods.NewPipeExtractor:NewPipeExtractor:extract-visitor-data-SNAPSHOT'
+    implementation 'com.github.whistlingwoods.NewPipeExtractor:NewPipeExtractor:skytube-SNAPSHOT'
     implementation 'com.github.TeamNewPipe:NoNonsense-FilePicker:5.0.0'
 
 /** Checkstyle **/
